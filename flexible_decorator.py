@@ -3,6 +3,10 @@ import functools
 import time
 from contextlib import contextmanager
 
+"""
+from stackoverflow: https://stackoverflow.com/q/44169998/532963
+"""
+
 
 def duration(func):
     """ decorator that can take either coroutine or normal function """
@@ -27,22 +31,25 @@ def duration(func):
 
 
 @duration
-def main(sleep_time):
+def main(sleep_time=.5):
+    print("normal function sleeps for:", sleep_time)
     time.sleep(sleep_time)
+    print('normal waited')
     return
 
 
 @duration
-async def main_async(sleep_time):
-    asyncio.sleep(sleep_time)
+async def main_async(sleep_time=.75):
+    print("coroutine sleeps for:", sleep_time)
+    await asyncio.sleep(sleep_time)
+    print('coroutine waited')
     return
 
 if __name__ == "__main__":
 
-    sleep_time = 0.5
-    print("normal function sleeps for:", sleep_time)
-    main(sleep_time)
+    main()
 
-    sleep_time_async = 0.75
-    print("coroutine sleeps for:", sleep_time_async)
-    main_async(sleep_time_async)
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main_async())
+
+    print("finished")
