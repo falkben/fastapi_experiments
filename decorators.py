@@ -4,7 +4,6 @@ call with: `uvicorn decorators:app --reload` or `python decorators.py` """
 import random
 from functools import wraps
 from fastapi.responses import RedirectResponse
-from starlette.exceptions import HTTPException
 
 import uvicorn
 from fastapi import Depends, FastAPI
@@ -93,7 +92,8 @@ async def greet(greeting=Depends(greeting_dependency)):
 @app.get("/", dependencies=[Depends(greeting_dependency)])
 @async_decorator
 async def root():
-    """ Dependency is "static". Value of Depends doesn't get passed into function """
+    """ Dependency is "static". Value of Depends doesn't get passed into function
+    we still get redirected half the time though """
     return {"message": "Hello World"}
 
 
