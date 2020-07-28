@@ -1,5 +1,5 @@
 """ flexible decorator around fastapi routes
-call with: `uvicorn flexible_fastapi_decorator:app --reload` or `python decorators.py` """
+call with: `uvicorn flexible_fastapi_decorator:app --reload` or `python flexible_fastapi_decorator.py` """
 
 import uvicorn
 from fastapi import FastAPI
