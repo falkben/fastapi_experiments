@@ -66,3 +66,11 @@ def test_hello_names_spaces_quotes():
     assert resp.status_code == 200
     expect_resp = "Hello BobHello Jeff"
     assert resp.content.decode() == expect_resp
+
+
+def test_hello_names_spaces_quotes():
+    names_param = 'bob'
+    resp = client.get(f'/hello_list?names={names_param}')
+    assert resp.status_code == 200
+    expect_resp = "Hello bob"
+    assert resp.content.decode() == expect_resp
