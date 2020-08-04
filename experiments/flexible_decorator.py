@@ -9,68 +9,85 @@ from stackoverflow: https://stackoverflow.com/q/44169998/532963
 
 
 def duration(func):
-    """ decorator that can take either coroutine or normal function """
+    """ decorator that can take either coroutine or normal function 
+    I cannot get this to work w/ FastAPI async methods
+    """
+
     @contextmanager
     def wrapping_logic():
         start_ts = time.time()
         yield
         dur = time.time() - start_ts
-        print('{} took {:.2} seconds'.format(func.__name__, dur))
+        print("{} took {:.2} seconds".format(func.__name__, dur))
 
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        if not asyncio.iscoroutinefunction(func):
+        def sync_wrapper(func, *args, **kwargs):
             with wrapping_logic():
                 return func(*args, **kwargs)
+
+        async def async_wrapper(func, *args, **kwargs):
+            with wrapping_logic():
+                return await func(*args, **kwargs)
+
+        if asyncio.iscoroutinefunction(func):
+            return async_wrapper(func, *args, **kwargs)
         else:
-            async def tmp():
-                with wrapping_logic():
-                    return (await func(*args, **kwargs))
-            return tmp()
+            return sync_wrapper(func, *args, **kwargs)
+
     return wrapper
 
 
-def duration2(func):
-    """
-    decorator that can take either coroutine or normal function 
-    works on FastAPI methods as well
-    """
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
+class SyncAsyncDecoratorFactory:
+    """ Using class inheritance to abstract the wrapper and repeat as little as possible """
+
+    @contextmanager
+    def wrapper(self, func, *args, **kwargs):
+        raise NotImplementedError
+
+    def __call__(self, func):
+        @functools.wraps(func)
+        def sync_wrapper(*args, **kwargs):
+            with self.wrapper(func, *args, **kwargs):
+                return func(*args, **kwargs)
+
+        @functools.wraps(func)
+        async def async_wrapper(*args, **kwargs):
+            with self.wrapper(func, *args, **kwargs):
+                return await func(*args, **kwargs)
+
+        if asyncio.iscoroutinefunction(func):
+            return async_wrapper
+        else:
+            return sync_wrapper
+
+
+class duration3(SyncAsyncDecoratorFactory):
+    """ decorator using class inheritance """
+
+    @contextmanager
+    def wrapper(self, func, *args, **kwargs):
         start_ts = time.time()
-        result = func(*args, **kwargs)
+        yield
         dur = time.time() - start_ts
-        print('{} took {:.2} seconds'.format(func.__name__, dur))
-        return result
-
-    @functools.wraps(func)
-    async def async_wrapper(*args, **kwargs):
-        start_ts = time.time()
-        result = await func(*args, **kwargs)
-        dur = time.time() - start_ts
-        print('{} took {:.2} seconds'.format(func.__name__, dur))
-        return result
-
-    if asyncio.iscoroutinefunction(func):
-        return async_wrapper
-    else:
-        return wrapper
+        print(f"{func.__name__} took {dur:.2} seconds")
 
 
-@duration2
-def main(sleep_time=.5):
+@duration
+def main(sleep_time=0.5):
     print("normal function sleeps for:", sleep_time)
     time.sleep(sleep_time)
-    print('normal waited')
+    print(f"normal waited")
     return
 
 
-@duration2
-async def main_async(sleep_time=.75):
+@duration
+async def main_async(sleep_time=0.75):
     print("coroutine sleeps for:", sleep_time)
     await asyncio.sleep(sleep_time)
-    print('coroutine waited')
+    print(f"coroutine waited")
     return
+
 
 if __name__ == "__main__":
 

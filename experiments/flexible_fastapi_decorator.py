@@ -16,59 +16,54 @@ from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
 
 
-def duration(func):
-    """adapted from github: 
-    https://gist.github.com/Integralist/77d73b2380e4645b564c28c53fae71fb/c2c757ff701aaf1f368a4aae232900cd846b425e#file-python-asyncio-timing-decorator-py
+class SyncAsyncDecoratorFactory:
+    """ This is a factory class for creating decorators that properly calls sync or async
+    Override the "wrapper" function for your specific decorator
     """
 
-    async def helper(func, *args, **kwargs):
+    @contextmanager
+    def wrapper(self, func, *args, **kwargs):
+        raise NotImplementedError
+
+    def __call__(self, func):
+        @functools.wraps(func)
+        def sync_wrapper(*args, **kwargs):
+            with self.wrapper(func, *args, **kwargs):
+                return func(*args, **kwargs)
+
+        @functools.wraps(func)
+        async def async_wrapper(*args, **kwargs):
+            with self.wrapper(func, *args, **kwargs):
+                return await func(*args, **kwargs)
+
         if asyncio.iscoroutinefunction(func):
-            print(f"this function is a coroutine: {func.__name__}")
-            return await func(*args, **kwargs)
+            return async_wrapper
         else:
-            print(f"not a coroutine: {func.__name__}")
-            return func(*args, **kwargs)
-
-    @functools.wraps(func)
-    async def wrapper(*args, **kwargs):
-        start_ts = time.time()
-        result = await helper(func, *args, **kwargs)
-        dur = time.time() - start_ts
-        print('{} took {:.2} seconds'.format(func.__name__, dur))
-
-        return result
-
-    return wrapper
+            return sync_wrapper
 
 
-def duration2(func):
-    """ decorator that can take either coroutine or normal function
-    using contextmanager """
+class Duration(SyncAsyncDecoratorFactory):
+    """ decorator using class inheritance
+    """
 
     @contextmanager
-    def wrapping_logic():
+    def wrapper(self, func, *args, **kwargs):
         start_ts = time.time()
         yield
         dur = time.time() - start_ts
-        print('{} took {:.2} seconds'.format(func.__name__, dur))
-
-    @functools.wraps(func)
-    async def wrapper(*args, **kwargs):
-        if not asyncio.iscoroutinefunction(func):
-            with wrapping_logic():
-                return func(*args, **kwargs)
+        print(f"{func.__name__} took {dur:.2} seconds")
+        if asyncio.iscoroutinefunction(func):
+            return print("async func call")
         else:
-            with wrapping_logic():
-                return (await func(*args, **kwargs))
-    return wrapper
+            return print("normal func call")
 
 
 app = FastAPI()
 
 
 @app.get("/hello")
-@duration
-def slow_hello(sleep_time: float = .5):
+@Duration()
+def slow_hello(sleep_time: float = 0.5):
     """ normal function using a flexible decorator """
 
     print("normal function sleeping for:", sleep_time)
@@ -78,18 +73,18 @@ def slow_hello(sleep_time: float = .5):
 
 
 @app.get("/async_hello")
-@duration
-async def slow_async_hello(sleep_time: float = .75):
+@Duration()
+async def slow_async_hello(sleep_time: float = 0.75):
     """ coroutine function using a flexible decorator """
 
     print("coroutine sleeping for:", sleep_time)
     await asyncio.sleep(sleep_time)
-    print('coroutine waited')
+    print("coroutine waited")
     return {"message": "slow async hello"}
 
 
 @app.get("/exception_async")
-@duration
+@Duration()
 async def exception_async():
     """ coroutine function try/catch example """
 
@@ -98,12 +93,12 @@ async def exception_async():
         raise TypeError
     except TypeError:
         print("we raised an exception")
-        await asyncio.sleep(.25)
+        await asyncio.sleep(0.25)
     return {"message": "we got through the try/except"}
 
 
 @app.get("/exception")
-@duration
+@Duration()
 def exception():
     """ normal function try/catch example """
 
@@ -112,12 +107,12 @@ def exception():
         raise ValueError
     except ValueError:
         print("we raised an exception")
-        time.sleep(.25)
+        time.sleep(0.25)
     return {"message": "we got through the try/except"}
 
 
 @app.get("/with_async")
-@duration
+@Duration()
 async def with_method_async():
     """ coroutine function using with block """
 
@@ -131,7 +126,7 @@ async def with_method_async():
 
 
 @app.get("/with")
-@duration
+@Duration()
 def with_method():
     """ normal function using with block """
 
