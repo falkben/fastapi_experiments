@@ -74,12 +74,12 @@ def common_paginate_args(
 
 
 @app.get("/common_db_args")
-def test_common_db_args(commons: dict = Depends(common_db_args)):
+def common_db_args(commons: dict = Depends(common_db_args)):
     return commons
 
 
 @app.get("/common_db_paginate_args")
-def test_common_db_args(commons: dict = Depends(common_paginate_args)):
+def common_db_paginate_args(commons: dict = Depends(common_paginate_args)):
     return commons
 
 
