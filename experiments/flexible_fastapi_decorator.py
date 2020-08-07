@@ -1,7 +1,6 @@
 """ flexible decorator around fastapi routes
 call with: `uvicorn flexible_fastapi_decorator:app --reload` or `python flexible_fastapi_decorator.py`
 stackoverflow: https://stackoverflow.com/q/44169998/532963
-important piece seems to be that the wrapper needs to be async
 """
 
 import asyncio
