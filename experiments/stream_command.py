@@ -1,4 +1,3 @@
-
 from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
 import itertools
@@ -10,6 +9,7 @@ import uvicorn
 stream_yes = FastAPI()
 
 blocksize = int(1024 * 1024 / 4)
+
 
 async def stream_command_async(proc, logger=None, blksize=blocksize):
     """
@@ -51,9 +51,10 @@ async def get_stream_yes():
     Run the yes command and stream results. Yes runs forever so this should be an
     infinite stream.
     """
-    cmd = ["yes"]
-    proc = await asyncio.create_subprocess_exec(*cmd,
-                                                stdout=asyncio.subprocess.PIPE)
+    cmd = "yes | head -n1000"
+    proc = await asyncio.create_subprocess_exec(
+        *["bash", "-c", cmd], stdout=asyncio.subprocess.PIPE
+    )
     stream_gen = stream_command_async(proc)
     return StreamingResponse(stream_gen)
 
@@ -63,7 +64,7 @@ async def get_stream_yes_fake():
     """
     Returns an infinite stream of "y"
     """
-    y_gen = itertools.repeat("y")
+    y_gen = itertools.repeat("y", 1000)
     return StreamingResponse(y_gen)
 
 
