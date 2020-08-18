@@ -1,6 +1,6 @@
 from typing import Optional
 import uvicorn
-from fastapi import FastAPI, Query, Request
+from fastapi import FastAPI, Query, Request, Depends
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -39,6 +39,20 @@ def conversions(
     }
 
     return merge_data
+
+
+class BodyOrQuery:
+    def __init__(self, item: Item = None, query: Item = Depends()):
+        self.items = {"item": item, "query": query}  # merge everything here
+
+
+# WIP re: body/query combination
+# this shows request Body in swagger for GET which is not ideal
+# still requires a manual merge of the data
+@app.post("/")
+@app.get("/")
+def home(body_or_query: BodyOrQuery = Depends()):
+    return body_or_query
 
 
 if __name__ == "__main__":
