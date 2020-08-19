@@ -36,10 +36,10 @@ async def astreamer(generator):
         # (there is no "yield from" for async generators)
         for i in generator:
             yield i
-            await asyncio.sleep(.001)
+            await asyncio.sleep(0.001)
 
     except asyncio.CancelledError as e:
-        print('cancelled')
+        print("cancelled", e)
 
 
 def streamer(generator):
@@ -48,7 +48,7 @@ def streamer(generator):
         # but that won't work with next(generator) in the finally statement
         for i in generator:
             yield i
-            time.sleep(.001)
+            time.sleep(0.001)
 
     except GeneratorExit:
         print("cancelled")
@@ -74,12 +74,12 @@ async def finite_stream():
 
 
 @app.get("/ainfinite")
-async def infinite_stream():
+async def ainfinite_stream():
     return StreamingResponse(astreamer(infinite_generator()))
 
 
 @app.get("/afinite")
-async def finite_stream():
+async def afinite_stream():
     return StreamingResponse(astreamer(finite_generator()))
 
 

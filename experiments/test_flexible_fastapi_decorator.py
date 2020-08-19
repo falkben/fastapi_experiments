@@ -1,5 +1,4 @@
 import time
-from time import sleep
 
 from fastapi.testclient import TestClient
 
@@ -26,4 +25,3 @@ def test_async_hello():
     assert resp.status_code == 200
     assert resp.json() == {"message": "slow async hello"}
     assert dur > sleep_time
-

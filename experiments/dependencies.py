@@ -30,7 +30,7 @@ def common_db_args(
     include_info: bool = True,
 ):
     """ Dependency for common db arguments
-    
+
     Note: most of these are for `stream_data` and could be moved into their own dependency if desired
 
     To use in code:

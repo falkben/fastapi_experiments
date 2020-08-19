@@ -1,2 +1,2 @@
-fastapi
+fastapi[test]
 uvicorn
