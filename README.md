@@ -45,7 +45,7 @@ client = TestClient(app)
 
 # TEST path operators here
 def test_hello():
-    resp = client.get(f"/hello")
+    resp = client.get("/hello")
     assert resp.status_code == 200
     assert resp.json() == "hello"
 ```
