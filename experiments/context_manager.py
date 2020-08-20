@@ -21,32 +21,27 @@ def hello_context_manager():
         yield _gen
     finally:
         print("we are cleaning up")
-        del _gen  # trying to simulate a db close
 
 
 def db_query():
-    def _db():
-        for i in range(1000):
-            yield str(i)
-            time.sleep(0.001)
-
-    try:
-        yield _db
-    finally:
-        print("we are cleaning up")
-        del _db
+    """ Dependency wrapping a context manager """
+    with hello_context_manager() as db:
+        yield db
 
 
 @app.get("/hello")
-def hello():
+async def hello():
     with hello_context_manager() as gen:
-        # ! this causes the finally block to occur immediately but somehow doesn't fail?
+        # ! DO NOT USE THIS, USE DEPENDENCY INSTEAD
+        # ! this causes the finally block to occur immediately
+        # returning StreamingResponse causes the context manager to close for some reason
         return StreamingResponse(gen())
 
 
 @app.get("/hello_dep")
-def hello_dep(gen: db_query = Depends()):
-    return StreamingResponse(gen())
+async def hello_dep(db=Depends(db_query)):
+    """ could be sync or async path operator here """
+    return StreamingResponse(db())
 
 
 if __name__ == "__main__":
