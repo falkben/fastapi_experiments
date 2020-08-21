@@ -1,12 +1,11 @@
 """ example taking list with square brackets like tornado lets you do """
 
 from typing import List, Optional
-from starlette.responses import StreamingResponse
 
 import uvicorn
-
-from fastapi import FastAPI, Query, Depends
-
+from fastapi import Depends, FastAPI, Query
+from pydantic import Json
+from starlette.responses import StreamingResponse
 
 app = FastAPI()
 
@@ -27,12 +26,13 @@ def parse_list(names: List[str] = Query(None)) -> Optional[List]:
     names can be in the format
     "[bob,jeff,greg]" or '["bob","jeff","greg"]'
     """
+
     def remove_prefix(text: str, prefix: str):
-        return text[text.startswith(prefix) and len(prefix):]
+        return text[text.startswith(prefix) and len(prefix) :]
 
     def remove_postfix(text: str, postfix: str):
         if text.endswith(postfix):
-            text = text[:-len(postfix)]
+            text = text[: -len(postfix)]
         return text
 
     if names is None:
@@ -51,8 +51,8 @@ def parse_list(names: List[str] = Query(None)) -> Optional[List]:
     flat_names = remove_postfix(flat_names, "]")
 
     names_list = flat_names.split(",")
-    names_list = [remove_prefix(n.strip(), "\"") for n in names_list]
-    names_list = [remove_postfix(n.strip(), "\"") for n in names_list]
+    names_list = [remove_prefix(n.strip(), '"') for n in names_list]
+    names_list = [remove_postfix(n.strip(), '"') for n in names_list]
 
     return names_list
 
@@ -61,6 +61,25 @@ def parse_list(names: List[str] = Query(None)) -> Optional[List]:
 def hello_list(names: List[str] = Depends(parse_list)):
     """ list param method """
 
+    if names is not None:
+        return StreamingResponse((f"Hello {name}" for name in names))
+    else:
+        return {"message": "no names"}
+
+
+@app.get("/json_list/")
+def json_list(names: Json = Query([])):
+    """ Use pydantic type parse the query string as JSON
+
+    names=["Bob", "Jeff"] is parsed into a Python list because the JSON parser can read that
+
+    However, it fails if the user supplies a string that isn't valid JSON
+
+    names='"Bob", "Jeff"' raises a validation error, though
+
+    Possibly with some regex we could enforce passing a list this way
+
+    """
     if names is not None:
         return StreamingResponse((f"Hello {name}" for name in names))
     else:

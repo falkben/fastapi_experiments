@@ -74,3 +74,16 @@ def test_hello_names_str():
     assert resp.status_code == 200
     expect_resp = "Hello bob"
     assert resp.content.decode() == expect_resp
+
+
+def test_json_list():
+    names_param = '["Bob", "Jeff"]'
+    resp = client.get(f"/json_list?names={names_param}")
+    assert resp.status_code, resp.text
+    assert resp.text == "Hello BobHello Jeff"
+
+    # the following fails:
+    names_param = '"Bob", "Jeff"'
+    resp = client.get(f"/json_list?names={names_param}")
+    assert resp.status_code, resp.text
+    assert resp.text == "Hello BobHello Jeff"
