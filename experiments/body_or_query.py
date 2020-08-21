@@ -54,5 +54,18 @@ def body_or_query(
     return merge_data
 
 
+""" you cannot decorate the same path operators twice so the following won't work """
+
+
+@app.post("/b_or_q")
+def only_body(body: Item):
+    return body
+
+
+@app.post("/b_or_q")
+def only_query(p_int: int, p_float: float, p_str: str):
+    return {"p_int": p_int, "p_float": p_float, "p_str": p_str}
+
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
