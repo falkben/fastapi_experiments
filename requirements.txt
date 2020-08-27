@@ -1,2 +1,3 @@
 fastapi[test]
 uvicorn
+fastapi-utils

@@ -23,7 +23,11 @@ def test_context_mngr(endpoint):
 
 
 @pytest.mark.parametrize(
-    "endpoint", ["file_context_mngr_stream", "file_context_mngr_direct"]
+    "endpoint",
+    [
+        pytest.param("file_context_mngr_stream", marks=pytest.mark.xfail),
+        "file_context_mngr_direct",
+    ],
 )
 def test_file_context_mngr(endpoint):
     """ file_context_mngr_stream test fails because the file gets closed """

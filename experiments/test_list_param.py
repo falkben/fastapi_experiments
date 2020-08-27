@@ -1,6 +1,7 @@
+import pytest
 from fastapi.testclient import TestClient
-from experiments.list_param import app as list_param_app
 
+from experiments.list_param import app as list_param_app
 
 client = TestClient(list_param_app)
 
@@ -76,6 +77,7 @@ def test_hello_names_str():
     assert resp.content.decode() == expect_resp
 
 
+@pytest.mark.xfail
 def test_json_list():
     names_param = '["Bob", "Jeff"]'
     resp = client.get(f"/json_list?names={names_param}")
