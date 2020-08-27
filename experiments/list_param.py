@@ -20,7 +20,9 @@ def hello(names: List[str] = Query(None)):
         return {"message": "no names"}
 
 
-def parse_list(names: List[str] = Query(None)) -> Optional[List]:
+def parse_list(
+    names: List[str] = Query(None, description="List of names to greet")
+) -> Optional[List]:
     """
     accepts strings formatted as lists with square brackets
     names can be in the format
