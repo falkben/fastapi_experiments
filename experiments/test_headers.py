@@ -48,3 +48,9 @@ def test_accept_stream():
     assert resp.status_code == 200
     assert resp.json()["accept"] == "text/html"
     assert "text/html; charset=utf-8" in resp.headers["Content-Type"]
+
+
+def test_file_stream():
+    resp = client.get("file_stream")
+    assert resp.status_code == 200
+    assert "Content-Disposition" in resp.headers

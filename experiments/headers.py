@@ -2,7 +2,7 @@ import json
 
 import uvicorn
 from fastapi import FastAPI, Header
-from fastapi.responses import HTMLResponse, Response, StreamingResponse
+from fastapi.responses import HTMLResponse, Response, StreamingResponse, FileResponse
 
 app = FastAPI()
 
@@ -56,6 +56,11 @@ async def accept_path_stream(name: str = "bob", accept=Header(None)):
         yield "}"
 
     return StreamingResponse(gen(), media_type=accept)
+
+
+@app.get("/file_stream")
+async def return_file():
+    return FileResponse(f"{__file__}", filename=f"{__file__}")
 
 
 if __name__ == "__main__":
