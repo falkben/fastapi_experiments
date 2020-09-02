@@ -57,13 +57,35 @@ async def get_stream_yes():
     stream_gen = stream_command_async(proc)
     return StreamingResponse(stream_gen)
 
+@stream_yes.get("/stream_yes_truncate")
+async def get_stream_yes_truncate():
+    """
+    Run the yes command and stream results. Yes runs forever so this should be an
+    infinite stream.
+    """
+    yes_cmd = "yes | head -n1000"
+    cmd = ["bash", "-c", yes_cmd]
+    proc = await asyncio.create_subprocess_exec(*cmd,
+                                                stdout=asyncio.subprocess.PIPE)
+    stream_gen = stream_command_async(proc)
+    return StreamingResponse(stream_gen)
+
 
 @stream_yes.get("/stream_yes_fake")
 async def get_stream_yes_fake():
     """
     Returns an infinite stream of "y"
     """
-    y_gen = itertools.repeat("y")
+    y_gen = itertools.repeat("y\n")
+    return StreamingResponse(y_gen)
+
+
+@stream_yes.get("/stream_yes_fake_truncate")
+async def get_stream_yes_fake_truncate():
+    """
+    Returns an infinite stream of "y"
+    """
+    y_gen = itertools.repeat("y\n", 1000)
     return StreamingResponse(y_gen)
 
 
