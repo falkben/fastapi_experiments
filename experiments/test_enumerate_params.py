@@ -20,3 +20,8 @@ def test_hello():
     resp = client.get("/hello")
     assert resp.status_code == 200
     assert resp.json() == "hello "
+
+
+def test_animal():
+    resp = client.get("/animal?anim=cat")
+    assert resp.status_code == 200
