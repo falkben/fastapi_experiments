@@ -19,5 +19,10 @@ def float_func(float_p: Optional[float] = Query(None)):
     return float_p
 
 
+@app.get("/fail")
+def failing_endpoint():
+    return not_exist
+
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
