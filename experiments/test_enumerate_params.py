@@ -23,5 +23,13 @@ def test_hello():
 
 
 def test_animal():
-    resp = client.get("/animal?anim=cat")
+    resp = client.get("/animal")
     assert resp.status_code == 200
+
+    resp = client.get("/animal?anim=CAT")
+    assert resp.status_code == 200
+    assert resp.json() == "CAT"
+
+    resp = client.get("/animal?anim=cat")
+    # case sensitive, if not in enum then we return an error and method doesn't run
+    assert resp.status_code == 422

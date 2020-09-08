@@ -1,7 +1,7 @@
 import json
 
 import uvicorn
-from fastapi import FastAPI, Header
+from fastapi import FastAPI, Header, Path
 from fastapi.responses import HTMLResponse, Response, StreamingResponse, FileResponse
 
 app = FastAPI()
@@ -20,14 +20,14 @@ async def hello():
 
 
 @app.get("/accept")
-async def accept_path(name: str = "bob", accept=Header("")):
+async def accept(name: str = "bob", accept=Header("")):
     """ by default we always return json """
 
     return {"hello": name, "accept": accept}
 
 
 @app.get("/accept_custom")
-async def accept_path_custom(name: str = "bob", accept=Header(None)):
+async def accept_custom_resp(name: str = "bob", accept=Header(None)):
     """ Content-Type header is set by using the media_type argument to Response """
 
     if accept is None or accept == "*/*":  # test client uses */* for accept header
@@ -36,8 +36,24 @@ async def accept_path_custom(name: str = "bob", accept=Header(None)):
     return Response(content=json.dumps(data), media_type=accept)
 
 
+@app.get("/accept-path/{filename:path}")
+async def accept_path(name: str = "bob", filename=Path(None), accept=Header(None)):
+
+    content_types = {"xml": "text/xml", "json": "application/json", "csv": "text/csv"}
+    extension = filename.split(".")[-1]
+    content_types.get(extension, "application/json")
+    if "xml" in accept or "xml" in extension:
+        # this matches default browser requests because they have "xml" in them
+        media_type = content_types.get("xml")
+    else:
+        media_type = content_types.get(extension, "application/json")
+
+    data = {"hello": name, "accept": accept}
+    return Response(content=json.dumps(data), media_type=media_type)
+
+
 @app.get("/accept_stream")
-async def accept_path_stream(name: str = "bob", accept=Header(None)):
+async def accept_stream(name: str = "bob", accept=Header(None)):
     """ Content-Type header is set by using the media_type argument to Streaming Response """
 
     if accept is None or accept == "*/*":  # test client uses */* for accept header

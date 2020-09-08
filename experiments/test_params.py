@@ -17,9 +17,3 @@ def test_float(param):
     resp = client.get(f"/float?float_p={param}")
     assert resp.status_code == 200
     assert resp.json() == float(param)
-
-
-def test_fail():
-    client = TestClient(app, raise_server_exceptions=False)
-    resp = client.get("/fail")
-    assert resp.status_code == 500

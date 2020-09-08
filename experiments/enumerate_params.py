@@ -25,7 +25,10 @@ Animal = Enum("Animal", {k: k for k in animals_dict})
 
 @app.get("/animal")
 async def animal(anim: Optional[Animal] = Query(None)):
-    return anim.name
+    if anim is not None:
+        return anim.name
+    else:
+        return "not found"
 
 
 if __name__ == "__main__":
