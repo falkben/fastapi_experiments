@@ -10,12 +10,13 @@ from fastapi import Depends, FastAPI
 
 app = FastAPI()
 
-### DECORATORS ###
+""" DECORATORS """
 
 
 def log_decorator(log_enabled):
     """ decorator that takes an argument
     think of this as a closure of a decorator """
+
     def actual_decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -24,16 +25,19 @@ def log_decorator(log_enabled):
             else:
                 print("Log disabled")
             return func(*args, **kwargs)
+
         return wrapper
+
     return actual_decorator
 
 
 def async_decorator(func):
-    """ async decorator w/o an argument 
+    """ async decorator w/o an argument
     main difference is you have to await the returned function """
+
     @wraps(func)
     async def wrapper(*args, **kwds):
-        print('Calling decorated function')
+        print("Calling decorated function")
 
         # half the time we redirect to goodbye just to demonstrate we can manipulate the response
         if random.randint(1, 2) % 2 == 0:
@@ -41,6 +45,7 @@ def async_decorator(func):
 
         # we need to await the function since it's a async
         return await func(*args, **kwds)
+
     return wrapper
 
 
@@ -49,27 +54,32 @@ def async_decorator_with_argument(time_to_eat):
     We use a closure to capture the argument in the decorator
     Await the returned async function
     """
+
     def actual_decorator(func):
         @wraps(func)
         async def wrapper(*args, **kwargs):
             print(time_to_eat)
             return await func(*args, **kwargs)
+
         return wrapper
+
     return actual_decorator
 
-### DEPENDENCIES ###
+
+""" DEPENDENCIES """
 
 
 def greeting_dependency():
     """ Dependency: to show we can use dependencies w/ decorators """
 
-    print('Calling dependency function')
+    print("Calling dependency function")
     if random.randint(1, 2) % 2 == 0:
         yield "Hello World"
     else:
         yield "Howdy"
 
-### ROUTES ###
+
+""" ROUTES """
 
 
 @app.get("/log")

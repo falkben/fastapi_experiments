@@ -9,7 +9,7 @@ from stackoverflow: https://stackoverflow.com/q/44169998/532963
 
 
 def duration(func):
-    """ decorator that can take either coroutine or normal function 
+    """ decorator that can take either coroutine or normal function
     I cannot get this to work w/ FastAPI async methods
     """
 
@@ -77,7 +77,7 @@ class duration3(SyncAsyncDecoratorFactory):
 def main(sleep_time=0.5):
     print("normal function sleeps for:", sleep_time)
     time.sleep(sleep_time)
-    print(f"normal waited")
+    print("normal waited")
     return
 
 
@@ -85,7 +85,7 @@ def main(sleep_time=0.5):
 async def main_async(sleep_time=0.75):
     print("coroutine sleeps for:", sleep_time)
     await asyncio.sleep(sleep_time)
-    print(f"coroutine waited")
+    print("coroutine waited")
     return
 
 
