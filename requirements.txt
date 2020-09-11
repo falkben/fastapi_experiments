@@ -1,3 +1,6 @@
 fastapi[test]
 uvicorn
+httpx
+pytest
+pytest-asyncio
 fastapi-utils
