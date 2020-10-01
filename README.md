@@ -10,9 +10,9 @@ When making frequent changes to the file and you want to immediately see the cha
 
 ## Install
 
-Create a virtual environment
+Create a virtual environment, activate, then:
 
-`pip install -r requirements.txt``
+`pip install -e .`
 
 ## Boilerplate
 

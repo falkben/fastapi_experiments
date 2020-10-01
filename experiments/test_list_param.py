@@ -11,8 +11,6 @@ def test_hello():
     assert resp.status_code == 200
     assert resp.json() == {"message": "no names"}
 
-
-def test_hello_list():
     names = ["bob", "joe"]
     names_param = "&".join([f"names={n}" for n in names])
     resp = client.get(f"/hello?{names_param}")
@@ -22,59 +20,22 @@ def test_hello_list():
     assert resp.content.decode() == expect_resp
 
 
-def test_hello_names():
-    names = ["bob", "joe"]
-    names_param = "&".join([f"names={n}" for n in names])
-    resp = client.get(f"/hello_list?{names_param}")
+@pytest.mark.parametrize(
+    "names_query,names_list",
+    [
+        ("names=bob&names=joe", ["bob", "joe"]),
+        ("names=[bob,joe,fred]", ["bob", "joe", "fred"]),
+        ('names=["bob","joe"]', ["bob", "joe"]),
+        ("names=[Bob, Jeff]", ["Bob", "Jeff"]),
+        ('names=["Bob", "Jeff"]', ["Bob", "Jeff"]),
+        ("names=bob", ["bob"]),
+    ],
+)
+def test_hello_list(names_query, names_list):
+    resp = client.get(f"/hello_list?{names_query}")
     assert resp.status_code == 200
-
-    expect_resp = "".join([f"Hello {n}" for n in names])
-    assert resp.content.decode() == expect_resp
-
-
-def test_hello_names_list():
-    names = ["bob", "joe", "fred"]
-    names_param = f"[{','.join(names)}]"
-    resp = client.get(f"/hello_list?names={names_param}")
-    assert resp.status_code == 200
-
-    expect_resp = "".join([f"Hello {n}" for n in names])
-    assert resp.content.decode() == expect_resp
-
-
-def test_hello_names_with_quotes():
-    names = ["bob", "joe"]
-    names_bracket_wrap = '","'.join(names)
-    names_param = f'["{names_bracket_wrap}"]'
-    resp = client.get(f"/hello_list?names={names_param}")
-    assert resp.status_code == 200
-
-    expect_resp = "".join([f"Hello {n}" for n in names])
-    assert resp.content.decode() == expect_resp
-
-
-def test_hello_names_spaces():
-    names_param = "[Bob, Jeff]"
-    resp = client.get(f"/hello_list?names={names_param}")
-    assert resp.status_code == 200
-    expect_resp = "Hello BobHello Jeff"
-    assert resp.content.decode() == expect_resp
-
-
-def test_hello_names_spaces_quotes():
-    names_param = '["Bob", "Jeff"]'
-    resp = client.get(f"/hello_list?names={names_param}")
-    assert resp.status_code == 200
-    expect_resp = "Hello BobHello Jeff"
-    assert resp.content.decode() == expect_resp
-
-
-def test_hello_names_str():
-    names_param = "bob"
-    resp = client.get(f"/hello_list?names={names_param}")
-    assert resp.status_code == 200
-    expect_resp = "Hello bob"
-    assert resp.content.decode() == expect_resp
+    expect_resp = "".join([f"Hello {n}" for n in names_list])
+    assert resp.text == expect_resp
 
 
 @pytest.mark.xfail
