@@ -19,5 +19,14 @@ def float_func(float_p: Optional[float] = Query(None)):
     return float_p
 
 
+@app.get("/flag")
+def flag_func(f: Optional[str] = Query(None)):
+    if f is not None:
+        f = True
+    else:
+        f = False
+    return f
+
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
