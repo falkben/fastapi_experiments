@@ -1,5 +1,6 @@
 import uvicorn
-from fastapi import FastAPI, Form, Depends
+from fastapi import FastAPI, Form, Depends, Header, Request, Response
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -26,14 +27,30 @@ class UserFormData(UserData):
     ...
 
 
-@app.post("/form")
-def form_endpoint(user: UserFormData = Depends(UserFormData)):
+def redirect_to_json(content_type: str = Header(None)):
+    if content_type == "application/json":
+        raise RedirectJSONException
+
+
+@app.post("/form", dependencies=[Depends(redirect_to_json)])
+def form_endpoint(
+    user: UserFormData = Depends(UserFormData),
+):
     return user
 
 
 @app.post("/json")
 def json_endpoint(user: UserData):
     return user
+
+
+class RedirectJSONException(Exception):
+    pass
+
+
+@app.exception_handler(RedirectJSONException)
+async def exception_handler(request: Request, exc: RedirectJSONException) -> Response:
+    return RedirectResponse(url="/json")
 
 
 if __name__ == "__main__":
