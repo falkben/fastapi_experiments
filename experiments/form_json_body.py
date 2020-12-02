@@ -27,7 +27,7 @@ class UserFormData(UserData):
     ...
 
 
-def redirect_to_json(content_type: str = Header(None)):
+async def redirect_to_json(content_type: str = Header(None)):
     if content_type == "application/json":
         raise RedirectJSONException
 
