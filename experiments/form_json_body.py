@@ -50,11 +50,6 @@ async def redirect_to_json(content_type: str = Header(None)):
         raise RedirectException("/json")
 
 
-async def redirect_to_form(content_type: str = Header(None)):
-    if content_type != "application/json":
-        raise RedirectException("/form")
-
-
 @app.post("/form", dependencies=[Depends(redirect_to_json)])
 def form_endpoint(
     user: UserData = Depends(UserFormData),
@@ -62,7 +57,7 @@ def form_endpoint(
     return user
 
 
-@app.post("/json", dependencies=[Depends(redirect_to_form)])
+@app.post("/json")
 def json_endpoint(user: UserData):
     return user
 
