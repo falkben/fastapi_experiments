@@ -1,17 +1,17 @@
 """Tests for stream_command.py"""
-import pytest
-import httpx
-import itertools
 import asyncio
+import itertools
 
+import httpx
+import pytest
 from async_asgi_testclient import TestClient
-
 from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
 
 from experiments.stream_command import stream_command_async
 
 stream_yes = FastAPI()
+
 
 @stream_yes.get("/stream_yes")
 async def get_stream_yes():
@@ -20,8 +20,7 @@ async def get_stream_yes():
     infinite stream.
     """
     cmd = ["yes"]
-    proc = await asyncio.create_subprocess_exec(*cmd,
-                                                stdout=asyncio.subprocess.PIPE)
+    proc = await asyncio.create_subprocess_exec(*cmd, stdout=asyncio.subprocess.PIPE)
     stream_gen = stream_command_async(proc)
     return StreamingResponse(stream_gen)
 
@@ -34,8 +33,11 @@ async def get_stream_yes_fake():
     y_gen = itertools.repeat("y\n")
     return StreamingResponse(y_gen)
 
-#### Tests ####
-# To run without captured output use pytest -s experiments/test_stream_command.py
+
+""" Tests
+To run without captured output use pytest -s experiments/test_stream_command.py
+"""
+
 
 @pytest.fixture(scope="module")
 def event_loop():
@@ -45,6 +47,7 @@ def event_loop():
     # If we close the loop here or use the default event_loop fixture, which also gets closed,
     # we get a bunch of errors about pending Tasks.
     # loop.close()
+
 
 # This is an example of how we would set up a test with httpx, but it currently doesn't work
 @pytest.mark.skip("This test hangs forever")
@@ -61,6 +64,7 @@ async def test_stream_yes_httpx():
                     break
                 assert line.strip() == "n"
                 i += 1
+
 
 # Note that the test failing has nothing to do with the subprocess call. This fake version also fails.
 @pytest.mark.skip("This test hangs forever")
@@ -118,9 +122,9 @@ if __name__ == "__main__":
                         break
                     print(line.strip())
                     i += 1
+
     sync_fetch_stream()
 
     # We could run this using an async client, but we don't have to
     # loop = asyncio.get_event_loop()
     # loop.run_until_complete(fetch_stream())
-

@@ -43,7 +43,7 @@ async def stream_context_mngr(iterations: int = 1000):
 
 @app.get("/stream_dep")
 async def stream_dep(db=Depends(mock_db_query)):
-    """ could be sync or async path operator here 
+    """ could be sync or async path operator here
     This works as expected.  Finally block in the "wrapped" context manager occurs after the response is finished """
     return StreamingResponse(db())
 

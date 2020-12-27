@@ -1,7 +1,5 @@
-
-
-
 blocksize = int(1024 * 1024 / 4)
+
 
 async def stream_command_async(proc, logger=None, blksize=blocksize):
     """
@@ -35,4 +33,3 @@ async def stream_command_async(proc, logger=None, blksize=blocksize):
         # Occasionally the process is terminated and already gone
         # from the os, so we have to catch and ignore this error
         pass
-
