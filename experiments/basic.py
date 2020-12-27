@@ -1,13 +1,12 @@
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 
 app = FastAPI()
 
 
 @app.get("/fail")
 def failing_endpoint():
-    # pyright: reportUndefinedVariable=false
-    return not_exist  # noqa: F821
+    raise HTTPException(500)
 
 
 if __name__ == "__main__":

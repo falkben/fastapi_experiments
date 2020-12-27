@@ -2,11 +2,11 @@
 
 Each experiment should be runnable as a single file, which allows convenient debugging from within vscode:
 
-`python FILENAME.py`
+`python experiments/FILENAME.py`
 
 When making frequent changes to the file and you want to immediately see the changes, you can run:
 
-`uvicorn FILENAME:app --reload`
+`uvicorn experiments.FILENAME:app --reload`
 
 ## Install
 
@@ -38,7 +38,7 @@ Test file:
 ```py
 from fastapi.testclient import TestClient
 
-from experiments.params import app
+from experiments.FILENAME import app
 
 client = TestClient(app)
 
