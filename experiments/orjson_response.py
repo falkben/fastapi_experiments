@@ -19,10 +19,14 @@ def datetime_parser(obj):
 
 class CustomORJSONResponse(ORJSONResponse):
     """ custom orjson response with a custom format for datetimes
-    orjson defaults to outputing datetime objects in RFC 3339 format:
-        "1970-01-01T00:00:00+00:00"
 
-    # see: https://github.com/ijl/orjson#opt_passthrough_datetime
+    orjson defaults to outputing datetime objects in RFC 3339 format:
+        `1970-01-01T00:00:00+00:00`
+
+    with this, we simply output the string representation of the python datetime object
+        `1970-01-01 00:00:00`
+
+    see: https://github.com/ijl/orjson#opt_passthrough_datetime
     """
 
     def render(self, content: Any) -> bytes:
