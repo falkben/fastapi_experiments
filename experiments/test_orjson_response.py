@@ -12,7 +12,7 @@ DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
 
 def measure_endpoint(route):
     t0 = time.time()
-    for _ in range(10):
+    for _ in range(100):
         client.get(route)
     t1 = time.time()
     print(f"{route}, {(t1 - t0):0.3f}s")
@@ -31,15 +31,17 @@ def test_orjson():
     measure_endpoint("/d")
     measure_endpoint("/e")
     measure_endpoint("/f")
+    measure_endpoint("/g")
 
 
 # output
-# /a, 6.679s
-# /b, 1.085s
-# /c, 1.100s
-# /d, 1.155s
-# /e, 1.084s
-# /f, 1.103s
+# /a, 7.029s
+# /b, 1.148s
+# /c, 1.157s
+# /d, 1.181s
+# /e, 1.163s
+# /f, 1.152s
+# /g, 1.547s
 
 if __name__ == "__main__":
     test_orjson()
