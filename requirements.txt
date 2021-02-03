@@ -1,5 +1,6 @@
 fastapi[test]
 fastapi-utils
+fastapi-restful
 uvicorn[standard]
 async_asgi_testclient
 authlib
