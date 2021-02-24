@@ -4,6 +4,6 @@ router = APIRouter()
 
 
 @router.get("/hello")
-def goodbye(request: Request):
+def hello(request: Request):
     request.app.url_path_for("goodbye")
     return "hello"
