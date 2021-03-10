@@ -4,3 +4,4 @@ fastapi-restful
 uvicorn[standard]
 async_asgi_testclient
 authlib
+elastic-apm
