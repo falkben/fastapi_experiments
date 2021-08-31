@@ -12,7 +12,15 @@ When making frequent changes to the file and you want to immediately see the cha
 
 Create a virtual environment, activate, then:
 
-`pip install -e .`
+```cmd
+pip install -r requirements.txt -e .
+```
+
+## Dependencies
+
+Use pip-tools (`pip install pip-tools`)
+
+`pip-compile --quiet --upgrade` to upgrade lock file
 
 ## Boilerplate
 
