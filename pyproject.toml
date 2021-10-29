@@ -2,6 +2,7 @@
 profile = "black"
 
 [tool.pytest.ini_options]
+python_files="*.py"
 addopts = "-s"
 testpaths = [
     "experiments"
