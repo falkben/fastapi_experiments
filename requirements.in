@@ -8,3 +8,4 @@ elastic-apm
 python-dotenv
 aiofiles
 fastapi-health
+pytest-asyncio
