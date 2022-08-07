@@ -70,7 +70,8 @@ prefix = "/form_to_json"
 def test_form_to_json_json():
     # test sending form data to json endpoint, check for redirect
     resp = client.post(prefix + "/json", data=data)
-    assert_good_response(resp)
+    assert resp.status_code == 307
+    assert resp.headers.get("location") == "/form"
 
     # test send json data to json endpoint (normal)
     resp = client.post(prefix + "/json", json=data)
