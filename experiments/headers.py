@@ -21,14 +21,14 @@ async def hello():
 
 @app.get("/accept")
 async def accept(name: str = "bob", accept=Header("")):
-    """ by default we always return json """
+    """by default we always return json"""
 
     return {"hello": name, "accept": accept}
 
 
 @app.get("/accept_custom")
 async def accept_custom_resp(name: str = "bob", accept=Header(None)):
-    """ Content-Type header is set by using the media_type argument to Response """
+    """Content-Type header is set by using the media_type argument to Response"""
 
     if accept is None or accept == "*/*":  # test client uses */* for accept header
         accept = "application/json"
@@ -54,7 +54,7 @@ async def accept_path(name: str = "bob", filename=Path(None), accept=Header(None
 
 @app.get("/accept_stream")
 async def accept_stream(name: str = "bob", accept=Header(None)):
-    """ Content-Type header is set by using the media_type argument to Streaming Response """
+    """Content-Type header is set by using the media_type argument to Streaming Response"""
 
     if accept is None or accept == "*/*":  # test client uses */* for accept header
         accept = "application/json"
@@ -63,7 +63,7 @@ async def accept_stream(name: str = "bob", accept=Header(None)):
     data = {"hello": name, "accept": accept}
 
     def gen():
-        """ generator that returns a dictionary """
+        """generator that returns a dictionary"""
         yield "{"
         for i, (k, v) in enumerate(data.items()):
             yield f'"{k}":"{v}"'

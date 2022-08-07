@@ -19,7 +19,7 @@ from fastapi_utils.cbv import cbv
 
 
 class SyncAsyncDecoratorFactory:
-    """ This is a factory class for creating decorators that properly calls sync or async
+    """This is a factory class for creating decorators that properly calls sync or async
     Override the "wrapper" function for your specific decorator
     To return something from wrapper use self._return
     """
@@ -46,7 +46,7 @@ class SyncAsyncDecoratorFactory:
 
     @classmethod
     def _return(cls, value):
-        """ this can be used to exit the context manager
+        """this can be used to exit the context manager
         returns whatever is in value
         """
         raise cls.ReturnValue(value)
@@ -77,8 +77,7 @@ class SyncAsyncDecoratorFactory:
 
 
 class Duration(SyncAsyncDecoratorFactory):
-    """ decorator using class inheritance
-    """
+    """decorator using class inheritance"""
 
     def __init__(self, default=None):
         self.default_value = default
@@ -97,8 +96,7 @@ class Duration(SyncAsyncDecoratorFactory):
 
 
 class RedirectTo(SyncAsyncDecoratorFactory):
-    """ decorator using class inheritance
-    """
+    """decorator using class inheritance"""
 
     def __init__(self, location=None):
         self.location = location
@@ -112,7 +110,7 @@ class RedirectTo(SyncAsyncDecoratorFactory):
 
 
 class CVBRedirectTo(SyncAsyncDecoratorFactory):
-    """ decorator using class inheritance
+    """decorator using class inheritance
     Can accesses instance variables (self is passed in as a kwarg so need a new var name for that)
     """
 
@@ -154,7 +152,7 @@ class HelloClass:
 @app.get("/hello")
 @Duration
 def slow_hello(sleep_time: float = 0.5):
-    """ normal function using a flexible decorator """
+    """normal function using a flexible decorator"""
 
     print("normal function sleeping for:", sleep_time)
     time.sleep(sleep_time)
@@ -165,7 +163,7 @@ def slow_hello(sleep_time: float = 0.5):
 @app.get("/async_hello")
 @Duration(default=100)
 async def slow_async_hello(sleep_time: float = 0.75):
-    """ coroutine function using a flexible decorator """
+    """coroutine function using a flexible decorator"""
 
     print("coroutine sleeping for:", sleep_time)
     await asyncio.sleep(sleep_time)
@@ -199,7 +197,7 @@ async def goodbye():
 @app.get("/exception_async")
 @Duration
 async def exception_async():
-    """ coroutine function try/catch example """
+    """coroutine function try/catch example"""
 
     print("we're about to throw an exception")
     try:
@@ -213,7 +211,7 @@ async def exception_async():
 @app.get("/exception")
 @Duration
 def exception():
-    """ normal function try/catch example """
+    """normal function try/catch example"""
 
     print("we're about to throw an exception from a normal method")
     try:
@@ -227,7 +225,7 @@ def exception():
 @app.get("/with_async")
 @Duration
 async def with_method_async():
-    """ coroutine function using with block """
+    """coroutine function using with block"""
 
     async def gen():
         async with aiofiles.open(f"{__file__}") as f:
@@ -241,7 +239,7 @@ async def with_method_async():
 @app.get("/with")
 @Duration
 def with_method():
-    """ normal function using with block """
+    """normal function using with block"""
 
     print("normal function with block")
 
@@ -256,8 +254,7 @@ def with_method():
 
 
 class DecoratModifyAttr(SyncAsyncDecoratorFactory):
-    """ example showing yield of data back to func
-    """
+    """example showing yield of data back to func"""
 
     def __init__(self, value=None):
         self.value = value

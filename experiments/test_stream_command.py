@@ -83,7 +83,7 @@ async def test_stream_yes_fake_httpx():
 
 @pytest.mark.asyncio
 async def test_stream_yes():
-    """Get the first 1000 lines from the infinite stream and test that the output is always 'y' """
+    """Get the first 1000 lines from the infinite stream and test that the output is always 'y'"""
     max_lines = 1000
     i = 0
     async with TestClient(stream_yes) as client:

@@ -12,7 +12,7 @@ from pydantic import BaseModel
 
 
 def default(obj):
-    """ custom parser for orjson (usually named default) """
+    """custom parser for orjson (usually named default)"""
     if isinstance(obj, datetime):
         return str(obj)
     raise TypeError
@@ -38,7 +38,7 @@ class CustomORJSONResponse(ORJSONResponse):
 
 
 class CustomJSONResponse(JSONResponse):
-    """ JSONResponse that handles datetimes. A little slower than orjson """
+    """JSONResponse that handles datetimes. A little slower than orjson"""
 
     def render(self, content: Any) -> bytes:
         return json.dumps(

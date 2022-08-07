@@ -12,7 +12,7 @@ app = FastAPI()
 
 @app.get("/hello")
 def hello(names: List[str] = Query(None)):
-    """ list param method """
+    """list param method"""
 
     if names is not None:
         return StreamingResponse((f"Hello {name}" for name in names))
@@ -61,7 +61,7 @@ def parse_list(
 
 @app.get("/hello_list")
 def hello_list(names: List[str] = Depends(parse_list)):
-    """ list param method """
+    """list param method"""
 
     if names is not None:
         return StreamingResponse((f"Hello {name}" for name in names))
@@ -71,7 +71,7 @@ def hello_list(names: List[str] = Depends(parse_list)):
 
 @app.get("/json_list/")
 def json_list(names: Json = Query([])):
-    """ Use pydantic type parse the query string as JSON
+    """Use pydantic type parse the query string as JSON
 
     names=["Bob", "Jeff"] is parsed into a Python list because the JSON parser can read that
 

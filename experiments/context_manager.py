@@ -11,7 +11,7 @@ app = FastAPI()
 
 @contextmanager
 def simple_context_manager(iterations=1000):
-    """ this could be a wrapper around a database """
+    """this could be a wrapper around a database"""
 
     def _gen():
         for i in range(iterations):
@@ -28,7 +28,7 @@ def simple_context_manager(iterations=1000):
 
 
 def mock_db_query(iterations: int = 1000):
-    """ Dependency wrapping a context manager """
+    """Dependency wrapping a context manager"""
     with simple_context_manager(iterations) as db:
         yield db
 
@@ -43,28 +43,28 @@ async def stream_context_mngr(iterations: int = 1000):
 
 @app.get("/stream_dep")
 async def stream_dep(db=Depends(mock_db_query)):
-    """ could be sync or async path operator here
-    This works as expected.  Finally block in the "wrapped" context manager occurs after the response is finished """
+    """could be sync or async path operator here
+    This works as expected.  Finally block in the "wrapped" context manager occurs after the response is finished"""
     return StreamingResponse(db())
 
 
 @app.get("/direct_context_mngr")
 async def direct_context_mngr(iterations: int = 1000):
-    """ No StreamingResponse -- this works (finally block executed last) """
+    """No StreamingResponse -- this works (finally block executed last)"""
     with simple_context_manager(iterations) as gen:
         return HTMLResponse("".join(gen()))
 
 
 @app.get("/file_context_mngr_stream")
 async def file_context_mngr_stream():
-    """ This fails because file is closed when it goes to stream """
+    """This fails because file is closed when it goes to stream"""
     with open(f"{__file__}") as f:
         return StreamingResponse(f)
 
 
 @app.get("/file_context_mngr_direct")
 async def file_context_mngr_direct():
-    """ this works because no streamingresponse """
+    """this works because no streamingresponse"""
     with open(f"{__file__}") as f:
         return HTMLResponse(f.read())
 

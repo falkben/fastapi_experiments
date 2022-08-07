@@ -57,3 +57,12 @@ def test_hello():
     assert resp.status_code == 200
     assert resp.json() == "hello"
 ```
+
+## pre-commit
+
+To install and ensure it's working, run:
+
+```cmd
+pre-commit install
+pre-commit run --all-files
+```

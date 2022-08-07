@@ -8,7 +8,7 @@ client = TestClient(app)
 
 @pytest.mark.parametrize("route", ["/hello", "/hello/", "/"])
 def test_get(route):
-    """ GETs are redirected w/o a status code change """
+    """GETs are redirected w/o a status code change"""
 
     resp = client.get(route)
     assert resp.status_code == 200
@@ -17,7 +17,7 @@ def test_get(route):
 
 @pytest.mark.parametrize("route,code", [("/hello", 200), ("/hello/", 200), ("/", 200)])
 def test_post(route, code):
-    """ POSTs w/ trailing slash redirects w/ 307s """
+    """POSTs w/ trailing slash redirects w/ 307s"""
 
     resp = client.post(route, data="nada", allow_redirects=True)
     assert resp.status_code == code
@@ -26,7 +26,7 @@ def test_post(route, code):
 
 @pytest.mark.parametrize("route", ["/hello_hello", "/hello_hello/"])
 def test_double_decorated_post(route):
-    """ without a redirect, needs mult. decorators """
+    """without a redirect, needs mult. decorators"""
 
     resp = client.post(route)
     assert resp.status_code == 200

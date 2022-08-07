@@ -14,8 +14,8 @@ app = FastAPI()
 
 
 def log_decorator(log_enabled):
-    """ decorator that takes an argument
-    think of this as a closure of a decorator """
+    """decorator that takes an argument
+    think of this as a closure of a decorator"""
 
     def actual_decorator(func):
         @wraps(func)
@@ -32,8 +32,8 @@ def log_decorator(log_enabled):
 
 
 def async_decorator(func):
-    """ async decorator w/o an argument
-    main difference is you have to await the returned function """
+    """async decorator w/o an argument
+    main difference is you have to await the returned function"""
 
     @wraps(func)
     async def wrapper(*args, **kwds):
@@ -50,7 +50,7 @@ def async_decorator(func):
 
 
 def async_decorator_with_argument(time_to_eat):
-    """ async decorator w/ an arg
+    """async decorator w/ an arg
     We use a closure to capture the argument in the decorator
     Await the returned async function
     """
@@ -70,7 +70,7 @@ def async_decorator_with_argument(time_to_eat):
 
 
 def greeting_dependency():
-    """ Dependency: to show we can use dependencies w/ decorators """
+    """Dependency: to show we can use dependencies w/ decorators"""
 
     print("Calling dependency function")
     if random.randint(1, 2) % 2 == 0:
@@ -85,38 +85,38 @@ def greeting_dependency():
 @app.get("/log")
 @log_decorator(False)
 def log_endpoint():
-    """ route that uses a decorator w/ an argument
+    """route that uses a decorator w/ an argument
     note that the decorator needs to be placed AFTER the fastapi route decorator
-    modifying the input to log_decorator e.g.: True, changes print statements: Log enabled/disabled """
+    modifying the input to log_decorator e.g.: True, changes print statements: Log enabled/disabled"""
     return {"message": "logging"}
 
 
 @app.get("/greet")
 @async_decorator
 async def greet(greeting=Depends(greeting_dependency)):
-    """ async method that half the time will redirect us to goodbye
-    Our greeting is also randomized by our dependency """
+    """async method that half the time will redirect us to goodbye
+    Our greeting is also randomized by our dependency"""
     return {"message": f"{greeting}"}
 
 
 @app.get("/", dependencies=[Depends(greeting_dependency)])
 @async_decorator
 async def root():
-    """ Dependency is "static". Value of Depends doesn't get passed into function
-    we still get redirected half the time though """
+    """Dependency is "static". Value of Depends doesn't get passed into function
+    we still get redirected half the time though"""
     return {"message": "Hello World"}
 
 
 @app.get("/lunch")
 @async_decorator_with_argument("now")
 async def lunch():
-    """ Async method using decorator with argument """
+    """Async method using decorator with argument"""
     return {"message": "lunchtime"}
 
 
 @app.get("/goodbye")
 async def goodbye():
-    """ used in our randomized redirect """
+    """used in our randomized redirect"""
     return {"message": "Goodbye"}
 
 
