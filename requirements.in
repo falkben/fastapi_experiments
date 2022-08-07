@@ -1,4 +1,4 @@
-fastapi[test]
+fastapi
 fastapi-utils
 fastapi-restful
 uvicorn[standard]
@@ -8,4 +8,10 @@ elastic-apm
 python-dotenv
 aiofiles
 fastapi-health
+pytest
 pytest-asyncio
+flake8
+black
+httpx
+orjson
+python-multipart
