@@ -70,6 +70,8 @@ idna==3.3
     #   rfc3986
 iniconfig==1.1.1
     # via pytest
+itsdangerous==2.1.2
+    # via -r requirements.in
 mccabe==0.7.0
     # via flake8
 multidict==6.0.2
