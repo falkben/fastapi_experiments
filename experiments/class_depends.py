@@ -38,7 +38,7 @@ class BaseClass:
 
     @router.get("/class_method_depends")
     def class_method_depends(self, names=Depends(depends_class_method)):
-        """ this doesn't work because the dependency cannot be a class method """
+        """this doesn't work because the dependency cannot be a class method"""
         return names
 
     @router.get("/class_method_and_depends")

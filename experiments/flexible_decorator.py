@@ -9,7 +9,7 @@ from stackoverflow: https://stackoverflow.com/q/44169998/532963
 
 
 def duration(func):
-    """ decorator that can take either coroutine or normal function
+    """decorator that can take either coroutine or normal function
     I cannot get this to work w/ FastAPI async methods
     """
 
@@ -39,7 +39,7 @@ def duration(func):
 
 
 class SyncAsyncDecoratorFactory:
-    """ Using class inheritance to abstract the wrapper and repeat as little as possible """
+    """Using class inheritance to abstract the wrapper and repeat as little as possible"""
 
     @contextmanager
     def wrapper(self, func, *args, **kwargs):
@@ -63,7 +63,7 @@ class SyncAsyncDecoratorFactory:
 
 
 class duration3(SyncAsyncDecoratorFactory):
-    """ decorator using class inheritance """
+    """decorator using class inheritance"""
 
     @contextmanager
     def wrapper(self, func, *args, **kwargs):

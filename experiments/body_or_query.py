@@ -1,6 +1,7 @@
 from typing import Optional
+
 import uvicorn
-from fastapi import FastAPI, Depends
+from fastapi import Depends, FastAPI
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -38,8 +39,8 @@ def body_or_query(
     p_float: Optional[float] = None,
     p_str: Optional[str] = None,
 ):
-    """ Can take query params or json data with the same name.
-    Probably cleaner to use the other approach with the Depends """
+    """Can take query params or json data with the same name.
+    Probably cleaner to use the other approach with the Depends"""
     query_data = {"p_int": p_int, "p_float": p_float, "p_str": p_str}
 
     item_dict = {}
@@ -54,7 +55,7 @@ def body_or_query(
     return merge_data
 
 
-""" you cannot decorate the same path operators twice so the following won't work """
+# you cannot decorate the same path operators twice so the following won't work
 
 
 @app.post("/b_or_q")

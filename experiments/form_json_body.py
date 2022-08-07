@@ -29,7 +29,7 @@ class FormToJSONRequest(Request):
     to JSON"""
 
     async def body(self) -> bytes:
-        """ Overwrite body method """
+        """Overwrite body method"""
         if not hasattr(self, "_body"):
 
             # only if request content-type is form
@@ -83,7 +83,7 @@ class FormToJSONRoute(APIRoute):
     """
 
     def get_route_handler(self) -> Callable:
-        """ overwrite get_route_handler with FormToJSONRequest """
+        """overwrite get_route_handler with FormToJSONRequest"""
         original_route_handler = super().get_route_handler()
 
         async def custom_route_handler(request: Request) -> Response:

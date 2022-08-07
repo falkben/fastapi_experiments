@@ -20,7 +20,7 @@ def test_init_attr():
 
 @pytest.mark.xfail
 def test_class_method_depends():
-    """ does not work """
+    """does not work"""
     resp = client.get("/class_method_depends?names=bob&names=joe")
     assert resp.status_code == 200
     assert resp.json() == "hello bob, joe"

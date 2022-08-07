@@ -3,8 +3,8 @@ blocksize = int(1024 * 1024 / 4)
 
 async def stream_command_async(proc, logger=None, blksize=blocksize):
     """
-        Generator
-        Yields the result of a unix command in chunks of blocksize
+    Generator
+    Yields the result of a unix command in chunks of blocksize
     """
     # TODO: Change this to pass in the command and create the process here
     # proc = await asyncio.create_subprocess_exec(*cmd,
