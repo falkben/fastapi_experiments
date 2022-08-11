@@ -1,5 +1,5 @@
 import json
-from typing import Callable
+from typing import Callable, List
 
 import fastapi.params
 import uvicorn
@@ -52,11 +52,16 @@ class FormToJSONRequest(Request):
                 ):
                     form = await self.form()
                     del self._form
-                    form_dict = dict(form)
+                    if body_field.outer_type_ == List:
+                        form_dict = [v for _, v in form.multi_items()]
+                    else:
+                        form_dict = dict(form)
                     body = json.dumps(form_dict).encode("utf-8")
                     self._body = body
                     # we might as well store it now while it's a dict
                     self._json = form_dict
+                    self._headers = self.headers.mutablecopy()
+                    self._headers["content-type"] = "application/json"
                     return self._body
 
             body = await super().body()
