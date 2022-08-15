@@ -12,7 +12,7 @@ DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
 
 def measure_endpoint(route):
     t0 = time.time()
-    for _ in range(100):
+    for _ in range(10):
         client.get(route)
     t1 = time.time()
     print(f"{route}, {(t1 - t0):0.3f}s")
