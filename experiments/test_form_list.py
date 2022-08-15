@@ -46,6 +46,7 @@ def test_hello_post_params_body():
 
 def test_hello_post_params_body_json():
     # resp = client.post("/hello_body", json=[("params", "a"), ("params", "b")])
+    # resp = client.post("/hello_body", json={"params": ["a", "b"]})
     resp = client.post("/hello_body", json=["a", "b"])
     assert resp.status_code == 200
     assert resp.json() == ["a", "b"]

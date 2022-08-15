@@ -14,11 +14,13 @@ from fastapi import (
     Response,
     params,
 )
+from fastapi.dependencies.utils import sequence_shapes, sequence_types
 from fastapi.exception_handlers import request_validation_exception_handler
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import RedirectResponse
 from fastapi.routing import APIRoute
 from pydantic import BaseModel
+from starlette.datastructures import FormData
 from starlette.routing import Match
 
 
@@ -52,10 +54,14 @@ class FormToJSONRequest(Request):
                 ):
                     form = await self.form()
                     del self._form
-                    if body_field.outer_type_ == List:
-                        form_dict = [v for _, v in form.multi_items()]
+
+                    if (
+                        body_field.shape in sequence_shapes
+                        or body_field.type_ in sequence_types
+                    ) and isinstance(form, FormData):
+                        form_dict = form.getlist(body_field.alias)
                     else:
-                        form_dict = dict(form)
+                        form_dict = form.get(body_field.alias)
                     body = json.dumps(form_dict).encode("utf-8")
                     self._body = body
                     # we might as well store it now while it's a dict
