@@ -19,7 +19,7 @@ authlib==1.0.1
     # via -r requirements.in
 black==22.6.0
     # via -r requirements.in
-certifi==2022.6.15
+certifi==2022.12.7
     # via
     #   elastic-apm
     #   httpcore
@@ -153,9 +153,7 @@ starlette==0.19.1
 toml==0.10.2
     # via pre-commit
 tomli==2.0.1
-    # via
-    #   black
-    #   pytest
+    # via pytest
 typing-extensions==4.3.0
     # via pydantic
 urllib3==1.26.11
